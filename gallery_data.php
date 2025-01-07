@@ -90,6 +90,7 @@
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label for="formGroupExampleInput" class="form-label">Yakin akan menghapus gambar "<strong><?= $row["id"] ?></strong>"?</label>
+                                            <br><img src="img/<?= $row["gambar"] ?>" alt="<?= $row["gambar"] ?>" height="150">
                                             <input type="hidden" name="id" value="<?= $row["id"] ?>">
                                             <input type="hidden" name="gambar" value="<?= $row["gambar"] ?>">
                                         </div>

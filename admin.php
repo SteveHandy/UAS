@@ -45,7 +45,7 @@ session_start();
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 mx-5">
                         <li class="nav-item">
-                            <a class="nav-link" href="./">Beranda</a>
+                            <a class="nav-link fw-bold" href="./">HomePage</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="admin.php?page=dashboard">Dashboard</a>
