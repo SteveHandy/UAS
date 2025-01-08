@@ -1,4 +1,5 @@
 <?php
+session_start();
 include "koneksi.php";
 ?>
 <!DOCTYPE html>
@@ -104,10 +105,20 @@ include "koneksi.php";
               <a class="nav-link" href="#aboutme">About Me</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="login.php">Login</a>
+              <?php
+              if (isset($_SESSION['username'])) {
+                echo '<a class="nav-link fw-bold" href="admin.php?page=dashboard">Admin</a>';
+              } else {
+                echo '<a class="nav-link" href="login.php">Login</a>';
+              }
+              ?>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="logout.php">Logout</a>
+              <?php
+              if (isset($_SESSION['username'])) {
+                echo '<a class="nav-link fw-bold" href="logout.php">Logout</a>';
+              }
+              ?>
             </li>
             <li class="nav-item">
               <button id="light-mode" class="btn btn-light">
