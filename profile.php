@@ -8,10 +8,17 @@ $data = $hasil->fetch_assoc();
 include "upload_foto.php";
 
 if (isset($_POST['simpan'])) {
-    $username = $_POST['username'];
+    $username = $_SESSION['username'];
     $password = $_POST['password'];
     $gambar = '';
     $nama_gambar = $_FILES['gambar']['name'];
+
+    if (empty($password) && empty($nama_gambar)) {
+        echo "<script>
+            alert('Value kosong! Gagal menyimpan data. Masukkan Password baru anda atau foto profil baru anda untuk menyimpan.');
+            document.location='admin.php?page=profile';
+        </script>";
+    }
 
     //jika ada file yang dikirim  
     if ($nama_gambar != '') {
@@ -47,26 +54,35 @@ if (isset($_POST['simpan'])) {
         }
 
         if ($password == '') {
-            $password = $_POST['password_lama'];
+            $stmt = $conn->prepare("UPDATE users 
+                                SET 
+                                profile = ?
+                                WHERE id = ?");
+
+            $stmt->bind_param("si", $gambar, $id);
+            $simpanProfile = $stmt->execute();
         } else {
             $password = md5($_POST['password']);
-        }
-
-        $stmt = $conn->prepare("UPDATE users 
+            $stmt = $conn->prepare("UPDATE users 
                                 SET 
-                                username =?,
                                 password =?,
                                 profile = ?
                                 WHERE id = ?");
 
-        $stmt->bind_param("sssi", $username, $password, $gambar, $id);
-        $simpan = $stmt->execute();
+            $stmt->bind_param("ssi", $password, $gambar, $id);
+            $simpan = $stmt->execute();
+        }
     }
 
     if ($simpan) {
         echo "<script>
             alert('Simpan data sukses! Harap login kembali untuk mengakses dashboard admin');
             document.location='logout.php';
+        </script>";
+    } else if ($simpanProfile) {
+        echo "<script>
+            alert('Simpan data sukses');
+            document.location='admin.php?page=profile';
         </script>";
     } else {
         echo "<script>
@@ -82,11 +98,7 @@ if (isset($_POST['simpan'])) {
 ?>
 <div class="container">
     <form action="" method="POST" enctype="multipart/form-data">
-        <div class="mb-3">
-            <input type="hidden" id="id" name="id" value="<?= $data['id'] ?>">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" value="<?= $data['username'] ?>" autocomplete="off">
-        </div>
+        <input type="hidden" id="id" name="id" value="<?= $data['id'] ?>">
         <div class="mb-3">
             <input type="hidden" id="password_lama" name="password_lama" value="<?= $data['password'] ?>">
             <label for="password" class="form-label">Ganti Password</label>
